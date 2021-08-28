@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.12;
 
-import "./IUniswapV2Factory.sol";
-import "./IUniswapV2Pair.sol";
-import "./IUniswapV2Router.sol";
-import "./Ownable.sol";
-import "./ERC20.sol"; 
+import "./libs/IUniswapV2Factory.sol";
+import "./libs/IUniswapV2Pair.sol";
+import "./libs/IUniswapV2Router.sol";
+import "./libs/Ownable.sol";
+import "./libs/ERC20.sol"; 
 
 // Polygalaxy Token ($GALAXY)
 contract Polygalaxy is ERC20, Ownable {
