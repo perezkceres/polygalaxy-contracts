@@ -5,7 +5,7 @@ import "./IUniswapV2Factory.sol";
 import "./IUniswapV2Pair.sol";
 import "./IUniswapV2Router.sol";
 import "./Ownable.sol";
-import "./ERC20.sol"; 
+import "./ERC20.sol";
 
 // Polygalaxy Token ($GALAXY)
 contract Polygalaxy is ERC20, Ownable {
@@ -24,7 +24,7 @@ contract Polygalaxy is ERC20, Ownable {
     mapping(address => bool) private _excludedFromAntiWhale;
     // Automatic swap and liquify enabled
     bool public swapAndVaultEnabled = true;
-    // Min amount to liquify. (default 500 GALAXY)
+    // Min amount to Vaults. (default 500 GALAXY)
     uint256 public minAmountToVaultCash = 15000 * 10**18;
     // The swap router, modifiable. Will be changed to Polygalaxy's router when our own AMM release
     IUniswapV2Router02 public polygalaxySwapRouter;
@@ -74,7 +74,7 @@ contract Polygalaxy is ERC20, Ownable {
         _excludedFromAntiWhale[address(this)] = true;
         _excludedFromAntiWhale[BURN] = true;
 
-        launchedAt = block.timestamp + 1*43200;
+        launchedAt = block.timestamp + 30*60*24;
         mint(msg.sender, 150000 * 10**18);
     }
 
@@ -227,6 +227,7 @@ contract Polygalaxy is ERC20, Ownable {
      * Can only be called by the current operator.
      */
     function updateMinAmountToVaultCash(uint256 _minAmount) external onlyOperator {
+        require(_minAmount > totalSupply().div(10000), "");
         emit MinAmountToVaultCashUpdated(msg.sender, minAmountToVaultCash, _minAmount);
         minAmountToVaultCash = _minAmount;
     }
