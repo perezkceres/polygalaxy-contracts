@@ -5,13 +5,13 @@ import "./IUniswapV2Factory.sol";
 import "./IUniswapV2Pair.sol";
 import "./IUniswapV2Router.sol";
 import "./Ownable.sol";
-import "./ERC20.sol";
+import "./ERC20.sol"; 
 
 // Polygalaxy Token ($GALAXY)
 contract Polygalaxy is ERC20, Ownable {
     // Burn address
     address private constant BURN = 0x000000000000000000000000000000000000dEaD;
-    // Transfer tax
+    // Transfer tax 
     // + Max transfer tax rate
     uint16 public constant MAXIMUM_TRANSFER_GALAXY_TAX = 1200;
     // + transfer tax rate
@@ -36,17 +36,14 @@ contract Polygalaxy is ERC20, Ownable {
     address public marketingWallet;
     address public vaultCashWallet;
     IERC20  private WMATIC;
-    //
+    // 
     uint256 public launchedAt;
     // Events
-    event OperatorTransferred(address indexed previousOperator, address indexed newOperator);
     event TransferTaxRateUpdated(address indexed operator, uint256 previousRate, uint256 newRate);
     event BurnRateUpdated(address indexed operator, uint256 previousRate, uint256 newRate);
     event SwapAndVaultEnabledUpdated(address indexed operator, bool enabled);
     event MinAmountToVaultCashUpdated(address indexed operator, uint256 previousAmount, uint256 newAmount);
     event PolygalaxySwapRouterUpdated(address indexed operator, address indexed router, address indexed pair);
-    event SwapAndLiquify(uint256 tokensSwapped, uint256 ethReceived, uint256 tokensIntoLiqudity);
-    event OperatorshipTransferred(address indexed previousOperator, address indexed newOperator);
 
     modifier lockTheSwap {
         _inSwapAndVaultCash = true;
@@ -68,7 +65,7 @@ contract Polygalaxy is ERC20, Ownable {
         polygalaxySwapRouter = IUniswapV2Router02(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff);
         polygalaxySwapPair   = IUniswapV2Factory(polygalaxySwapRouter.factory()).createPair(polygalaxySwapRouter.WETH(), address(this));
         WMATIC               = IERC20(polygalaxySwapRouter.WETH());
-
+        
         _excludedFromAntiWhale[msg.sender] = true;
         _excludedFromAntiWhale[address(0)] = true;
         _excludedFromAntiWhale[address(this)] = true;
@@ -83,12 +80,12 @@ contract Polygalaxy is ERC20, Ownable {
         _mint(_to, _amount);
         _moveDelegates(address(0), _delegates[_to], _amount);
     }
-
+    
     /// @dev overrides transfer function to meet tokenomics of GALAXY
     function _transfer(address sender, address recipient, uint256 amount) internal virtual override {
         checkLaunched(sender);
-
-        // swap and vault cash
+        
+        // swap and vault cash  
         if (swapAndVaultEnabled && !_inSwapAndVaultCash && sender != polygalaxySwapPair) {
             swapAndVaultCash();
         }
@@ -128,13 +125,13 @@ contract Polygalaxy is ERC20, Ownable {
 
             // swap tokens for ETH
             swapTokensForEth(minAmountToVaultCash);
-
+            
             // how much ETH did we just swap into?
             uint256 newBalance = address(this).balance.sub(initialBalance);
 
-            // add VaultCash & Marketing GALAXY
+            // add VaultCash & Marketing GALAXY 
             addVaultCashOfGalaxyAndFee(newBalance);
-
+             
         }
     }
 
@@ -155,21 +152,21 @@ contract Polygalaxy is ERC20, Ownable {
             address(this),
             block.timestamp
         );
-
+        
     }
 
     function addVaultCashOfGalaxyAndFee(uint256 amount) private {
         (bool success,) = payable(polygalaxySwapRouter.WETH()).call{value: amount, gas: 300000}("");
-        if(success) {
+        if(success) { 
             uint256 v = amount.mul(vaultRate).div(100);
             WMATIC.transfer(vaultCashWallet, v);
             WMATIC.transfer(marketingWallet, amount.sub(v));
             emit AmountMatic(vaultCashWallet, amount);
         }
     }
-
+    
     event AmountMatic(address wallet, uint256 amount);
-
+    
     function checkLaunched(address sender) internal view {
         require(launchedAt < block.number || _excludedFromAntiWhale[sender], "Pre-Launch Protection");
     }
@@ -182,7 +179,7 @@ contract Polygalaxy is ERC20, Ownable {
         _excludedFromAntiWhale[_marketingWallet] = true;
         _excludedFromAntiWhale[_vaultCashWallet] = true;
     }
-
+    
     /**
      * @dev Returns the address is excluded from antiWhale or not.
      */
@@ -220,8 +217,8 @@ contract Polygalaxy is ERC20, Ownable {
     function updateVaultRate(uint16 _vaultRate) external onlyOperator {
         require(_vaultRate <= 100, "GALAXY::updateVaultMarketingRate: rate invalid value!");
         vaultRate = _vaultRate;
-    }
-
+    } 
+    
     /**
      * @dev Update the min amount to liquify.
      * Can only be called by the current operator.
