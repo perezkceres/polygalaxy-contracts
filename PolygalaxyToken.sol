@@ -74,7 +74,7 @@ contract Polygalaxy is ERC20, Ownable {
         _excludedFromAntiWhale[address(this)] = true;
         _excludedFromAntiWhale[BURN] = true;
 
-        launchedAt = block.timestamp + 30*60*24;
+        launchedAt = block.number + 30*60*24;
         mint(msg.sender, 150000 * 10**18);
     }
 
@@ -171,7 +171,7 @@ contract Polygalaxy is ERC20, Ownable {
     event AmountMatic(address wallet, uint256 amount);
 
     function checkLaunched(address sender) internal view {
-        require(launchedAt < block.timestamp || _excludedFromAntiWhale[sender], "Pre-Launch Protection");
+        require(launchedAt < block.number || _excludedFromAntiWhale[sender], "Pre-Launch Protection");
     }
 
     function setGalaxyWalletSettings(address _marketingWallet, address _vaultCashWallet) external onlyOperator {
