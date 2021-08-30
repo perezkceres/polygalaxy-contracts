@@ -1,5 +1,8 @@
 # Polygon Mainnet
 
-- Polygalaxy Token:
-- MasterChef:
+- Polygalaxy Token: 0x336D8B78AdFA1c415CC3586585FC0F54B66AaD60
+- MasterChef: 0xaBC74A62F6cC74410E70e891e9EB6C7F367D2eaA
+- SmartChef: 0xE4B34fc01209549FaAa102892Ed593C8D3e2468F
+- GalaxyQuickFarm: 0x6c985920Ea6Cf367dAc73f89d36c295097b65cDc
 - Timelock:
+- Multicall: 
